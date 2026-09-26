@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Slack Channel Exporter",
+  "version": "1.0.0",
+  "author": "aipieksel",
+  "description": "Export Slack channel messages and replies by date, with optional downloaded attachments.",
+  "optional_host_permissions": ["https://files.slack.com/*"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "downloads"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "action": {
+    "default_title": "Slack Channel Exporter",
+    "default_icon": {
+      "16": "icons/icon-light-16.png",
+      "32": "icons/icon-light-32.png",
+      "48": "icons/icon-light-48.png",
+      "128": "icons/icon-light-128.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "panel.html",
+        "panel.css",
+        "panel.js",
+        "src/core.js",
+        "src/download-attachments.js",
+        "src/zip.js"
+      ],
+      "matches": [
+        "https://app.slack.com/*",
+        "https://*.slack.com/*"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

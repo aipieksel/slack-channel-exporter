@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Slack Channel Exporter</title><link rel="stylesheet" href="panel.css"></head>
+<body>
+  <div class="toolbar">
+    <button id="start" class="primary">Export channel</button>
+    <button id="cancel" hidden>Stop capture</button>
+    <button id="close">Close</button>
+  </div>
+  <div class="section-title">CURRENT CHANNEL</div>
+  <main>
+    <fieldset id="options">
+      <legend class="sr-only">Export options</legend>
+      <div class="dates">
+        <label>Start date<input id="from" type="date"></label>
+        <label>End date (inclusive)<input id="to" type="date"></label>
+      </div>
+      <label class="option"><span><span>Include attachments</span><small>Download channel files with the transcript in one ZIP.</small></span><input id="media" type="checkbox"></label>
+    </fieldset>
+    <section id="results" hidden>
+      <h2>Export</h2><p id="summary"></p><ul id="warnings"></ul>
+      <p id="attachments" hidden></p>
+      <p id="verification" role="status"></p>
+      <button id="save" class="primary" hidden disabled>Retry download</button>
+    </section>
+    <footer>Local-only processing · No account API · No telemetry</footer>
+  </main>
+  <div id="status" role="status" aria-live="polite">Ready on an open Slack channel.</div>
+  <script src="src/core.js"></script><script src="src/zip.js"></script><script src="src/download-attachments.js"></script><script src="panel.js"></script>
+</body>
+</html>
