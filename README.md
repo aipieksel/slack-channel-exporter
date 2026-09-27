@@ -1,11 +1,13 @@
 # Slack Channel Exporter
 By aipieksel.
 
-Version: 1.0.0 (unpublished).
+Version: 1.0.0.
 
 ## Overview
 
-Slack Channel Exporter is a local-first Chrome extension that exports the currently open Slack web channel as readable Markdown. It can optionally create a ZIP with attachments downloaded from Slack. Thread replies appear beneath their parent in timestamp order.
+Slack Channel Exporter helps you save a readable record of the channel open in Slack web. It writes messages and threaded replies to Markdown, with optional date filtering and a ZIP of attachments it can download through your existing Slack session. The result is a local file you can review and keep with your own records.
+
+Choose a channel and date range, then start the export from the floating panel. The extension collects available history before opening threads, checks the capture boundaries and reply counts, and marks an export partial when it cannot prove coverage. Attachments are included only when their downloads succeed. It does not recover deleted or inaccessible messages or export an entire Slack account.
 
 ## Install
 
@@ -15,7 +17,7 @@ Slack Channel Exporter is a local-first Chrome extension that exports the curren
 4. Pin **Slack Channel Exporter** to the browser toolbar.
 5. Open a channel in Slack web (`https://app.slack.com/client/WORKSPACE/CHANNEL`), select its Messages view, and click the extension.
 
-No build, Slack app registration, API token or server is required. This package is an unpacked extension, not a Chrome Web Store listing.
+Loading this source folder requires no build, Slack app registration, API token, or server.
 
 ## Export
 
@@ -28,23 +30,11 @@ No build, Slack app registration, API token or server is required. This package 
 
 The panel uses the same shared shell as ChatGPT Chat Exporter: drag its header to move it or resize from any of its four corners. Closing it hides it; clicking the toolbar restores it. **Stop capture** retains the collected partial result. Reloading Slack discards the in-memory capture.
 
-### Capture behavior
+### What the capture checks
 
-Historical Slack high-activity posting notices remain in the transcript but no longer fail export verification. A capture that passes the history, overlap and reply checks is verified, not partial. Unknown senders on ordinary messages, missing replies, interrupted captures and other capture failures still prevent verification.
+The exporter covers channel history with overlapping scroll windows before it opens threads. It checks the selected beginning and end, gaps between rendered windows, and the reply count of each opened thread. A Slack high-activity notice stays in the transcript but does not by itself make the capture partial. Unknown senders, missing replies, interrupted collection, and other coverage failures do.
 
-#### Downloads
-
-Export channel automatically downloads the result, without a second save step or an extension-requested Save dialog. Completion is reported only after the browser confirms the download. Interrupted downloads offer a retry. The attachments row is compact with regular-weight text, and the panel cannot stretch beyond its content height. Slack's high-activity notice is reported specifically without hiding the limitation or guessing its author.
-
-Exports the Slack web channel you have open to Markdown, or a ZIP containing Markdown and attachments downloaded from Slack. Thread replies appear beneath their parent in timestamp order.
-
-#### History
-
-Faster overlapping history traversal, fewer redundant waits, and early completion for fully captured threads. Reopened virtual threads are identified before scrolling their parent into view. Compact same-sender messages, Slack paragraph-break spans, and literal Markdown punctuation retain their original meaning. The history pass still finishes before any replies are opened.
-
-#### Capture checks
-
-Corrected scroll budgets, stale thread controls, channel-change handling, hidden thread failures, duplicate broadcast replies, extraction of multiple text blocks, file preflight checks and save-state races. A gap between rendered windows now produces an explicit partial warning.
+The result downloads automatically after capture. **Downloaded:** appears only after the browser confirms the file; an interrupted download offers **Retry download**. Compact same-sender messages, paragraph breaks, code, links, lists, and reactions retain their rendered meaning where supported.
 
 **Updating the unpacked installation:** select the new `extension/` runtime folder, click **Reload** in the extensions page, and refresh the Slack tab. In-memory captures from the old version are discarded by refresh.
 
@@ -89,9 +79,7 @@ All transcript processing is local. There is no telemetry, analytics, remote bac
 
 ## Project layout
 
-`extension/` contains the complete browser runtime, manifest and icons. `tooling/` contains regression tests and packaging scripts. `dist/` holds the single unpublished 1.0.0 package. Workspace `../tooling/` groups shared panel code, synchronization scripts and benchmark evidence. Chrome requires the manifest at the release ZIP root, not wrapped in `extension/`.
-
-Both main UI controllers are `panel.js` and use the same shared shell. Slack embeds `panel.html`; ChatGPT generates its main panel and has a distinct `media.*` view. ChatGPT separates formatting, validation and startup into modules; Slack groups corresponding responsibilities in its core, adapter and content modules. File inventories need not be identical to share a panel.
+`extension/` contains the browser runtime and manifest; `tooling/` contains tests and packaging scripts; `dist/` holds generated packages. The channel adapter and export logic live under `extension/src/`. Chrome expects `manifest.json` at the root of an extension package. The [documentation index](documentation/0-index.md) routes deeper implementation questions.
 
 ## Development
 
